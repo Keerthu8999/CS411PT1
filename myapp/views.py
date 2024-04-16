@@ -1,17 +1,19 @@
+import random
 from django.http import JsonResponse
-from .models import Author
+from .models import Author, User
+import json
+from django.db import connection
+from django.views.decorators.csrf import csrf_exempt
+
 
 def article_data(request):
     try:
         articles = list(Author.objects.all().values())
-        return JsonResponse(articles, safe=False)  # Convert QuerySet to a list and return as JSON
+        return JsonResponse(articles, safe=False)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
     
-from django.db import connection
-
 def paper_statistics(request):
-    # Your SQL query as a multi-line string
     raw_query = """
     SELECT COUNT(p.title) AS TotalPapers, YEAR(p.update_date) AS YearUpdated
     FROM papers p 
@@ -28,7 +30,6 @@ def paper_statistics(request):
         cursor.execute(raw_query)
         result_set = cursor.fetchall()
 
-    # Format the results into a list of dictionaries
     papers_by_year = [
         {'TotalPapers': row[0], 'YearUpdated': row[1]}
         for row in result_set
@@ -36,3 +37,13 @@ def paper_statistics(request):
 
     return JsonResponse(papers_by_year, safe=False)
 
+@csrf_exempt
+def post_data(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            new_entry = User(user_id=random.randint(1033453, 10334539), first_name=data['fname'], last_name=data['lname'], email=data['email'], password = data['pass'])
+            new_entry.save()
+            return JsonResponse({'status': 'success'}, status=200)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
