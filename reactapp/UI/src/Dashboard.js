@@ -1,8 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { Button } from "@material-tailwind/react";
 
 const styles = {
+    card: {
+        backgroundColor: '#fff',
+        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.1)',
+        borderRadius: '10px',
+        padding: '20px',
+        margin: '10px',
+        maxWidth: '100%',
+        minHeight: '20%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        border: '1px solid #ddd'
+    },
+    link: {
+        boxShadow: '0 0.5px 0.5px 0 rgba(0, 0, 0, 0.1)',
+        margin: '10px',
+    },
+    button:{
+        margin: '10px',
+        flexDirection: 'column',
+        alignItems: 'flex-end'
+    }
 };
 
 const ListItem = ({ item, addToFavorites }) => {
