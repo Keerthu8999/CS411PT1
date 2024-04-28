@@ -60,7 +60,6 @@ const Dashboard = () => {
   return (
     <div>
       <header>
-        {/* Your header content */}
       </header>
       <main>
         {papers.map((item) => (
@@ -68,7 +67,6 @@ const Dashboard = () => {
         ))}
       </main>
       <footer>
-        {/* Your footer content */}
       </footer>
     </div>
   );
