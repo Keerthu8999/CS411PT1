@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'corsheaders',  # for handling CORS
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -74,6 +75,8 @@ WSGI_APPLICATION = "cs411pt1.wsgi.application"
 '''
 
 '''
+
+
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

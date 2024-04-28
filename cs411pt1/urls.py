@@ -17,9 +17,11 @@ Including another URLconf
 from django.urls import path
 from myapp import views
 from myapp.views import paper_statistics
+from myapp.views import LoginView
 from django.contrib import admin
 
 urlpatterns = [
+    path('api/login/', LoginView.as_view(), name='login'),
     path('admin/', admin.site.urls),
     path('', views.paper_statistics, name='article-data'),
     path('api/post_data/', views.post_data, name='post-data')
