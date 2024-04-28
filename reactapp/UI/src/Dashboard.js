@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 const styles = {
-  // Add your styles here
 };
 
 const ListItem = ({ item, addToFavorites }) => {
