@@ -1,9 +1,19 @@
 import random
 from django.http import JsonResponse
-from .models import Author, User
 import json
 from django.db import connection
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+def dictfetchall(cursor):
+    """
+    Return all rows from a cursor as a dict.
+    Assume the column names are unique.
+    """
+    columns = [col[0] for col in cursor.description]
+    return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
 
 def article_data(request):
@@ -47,3 +57,25 @@ def post_data(request):
             return JsonResponse({'status': 'success'}, status=200)
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+class LoginView(APIView):
+    def post(self, request):
+        try:
+            username, password = request.data['username'], request.data['password']
+        except KeyError as e:
+            return Response({"error": f"Missing data: {e}"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            login_query = """
+            SELECT * FROM users WHERE username = %s AND password = %s
+            """
+            with connection.cursor() as cursor:
+                cursor.execute(login_query, [username, password])
+            user = dictfetchall(cursor)[0]
+            print(user)
+        except Exception as e:
+            return Response({"error": "Invalid user details"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        return Response({"message": "Login successful for user: {}".format(username), "token": user['user_id']}, status=status.HTTP_200_OK)
+
+
