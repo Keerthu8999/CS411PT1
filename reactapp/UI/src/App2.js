@@ -5,7 +5,6 @@ import {Container, Row, Col} from 'react-bootstrap';
 import LoginPage from './Login';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import HeaderNav from './Navbar';
-import Dashboard from './Dashboard';
 
 
 const RootComponent = () => {
@@ -44,7 +43,7 @@ function App() {
                     <HeaderNav />
                 </Row>
                 <Row>
-                <Dashboard/>
+                    <p>Dashboard Content goes here</p>
                 </Row>
                 </Container>
         }
