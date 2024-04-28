@@ -24,5 +24,7 @@ urlpatterns = [
     path('api/login/', LoginView.as_view(), name='login'),
     path('admin/', admin.site.urls),
     path('', views.paper_statistics, name='article-data'),
-    path('api/post_data/', views.post_data, name='post-data')
+    path('api/post_data/', views.post_data, name='post-data'),
+    path('api/post_upp/', views.post_upp, name='post_upp'),
+    path('api/get_all_papers/', views.get_all_papers, name = 'get_all_papers')
 ]

@@ -1,4 +1,5 @@
 import random
+import traceback
 from django.http import JsonResponse
 import json
 from django.db import connection
@@ -16,12 +17,24 @@ def dictfetchall(cursor):
     return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
 
-def article_data(request):
-    try:
-        articles = list(Author.objects.all().values())
-        return JsonResponse(articles, safe=False)
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+def get_all_papers(request):
+    raw_query = """
+    SELECT papers.paper_id, papers.submitter, papers.title, papers.update_date, categories.category_description
+    FROM papers join paper_categories on papers.paper_id = paper_categories.paper_id
+    JOIN categories on paper_categories.category_id = categories.category_id
+    LIMIT 15
+    """
+
+    with connection.cursor() as cursor:
+        cursor.execute(raw_query)
+        result_set = cursor.fetchall()
+
+    response = [
+        {'paper_id': row[0], 'submitter': row[1], 'title': row[2], 'update_date': row[3], 'category': row[4]}
+        for row in result_set
+    ]
+
+    return JsonResponse(response, safe=False)
     
 def paper_statistics(request):
     raw_query = """
@@ -56,6 +69,28 @@ def post_data(request):
             new_entry.save()
             return JsonResponse({'status': 'success'}, status=200)
         except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+        
+@csrf_exempt
+def post_upp(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            print(data)
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT user_id FROM users WHERE username = %s", [data['user_id']])
+                row = cursor.fetchone()
+                if row is not None:
+                    user_id = row[0]
+                    sql = """INSERT INTO user_preferred_papers (user_id, paper_id, preference_ranking) VALUES (%s, %s, %s)"""
+                    cursor.execute(sql, [user_id, data['paper_id'], 1])
+                    connection.commit()
+                    return JsonResponse({'status': 'success', 'user_id': user_id}, status=200)
+                else:
+                    traceback.print_exc()
+                    return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
+        except Exception as e:
+            traceback.print_exc()
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 class LoginView(APIView):
