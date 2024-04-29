@@ -17,10 +17,11 @@ Including another URLconf
 from django.urls import path
 from myapp import views
 from myapp.views import paper_statistics
-from myapp.views import LoginView
+from myapp.views import LoginView, DataUserView
 from django.contrib import admin
 
 urlpatterns = [
+    path('api/data/user/<int:user_id>/', DataUserView.as_view(), name='data-user'),
     path('api/login/', LoginView.as_view(), name='login'),
     path('admin/', admin.site.urls),
     path('', views.paper_statistics, name='article-data'),

@@ -78,4 +78,30 @@ class LoginView(APIView):
 
         return Response({"message": "Login successful for user: {}".format(username), "token": user['user_id']}, status=status.HTTP_200_OK)
 
+class DataUserView(APIView):
+    def get(self, request, user_id):
+        try:
+            with connection.cursor() as cursor:
+                cursor.callproc('get_top_authors_and_keywords', (user_id,))
+
+                result_sets = cursor.fetchall()
+
+                data = []
+                for result in result_sets:
+                    print(result)
+                    category_data = {
+                        'category_id': result[0],
+                        'category_name': result[1],
+                        'category_description': result[2],
+                        'top_authors': json.loads(result[3]),
+                        'top_keywords': json.loads(result[4])
+                    }
+
+                    data.append(category_data)
+        except Exception as e:
+            print(e)
+            return Response({"error": "Unable to complete query"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        return Response({"message": "Got data for user preferences", "data": data}, status=status.HTTP_200_OK)
+
 
