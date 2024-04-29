@@ -167,7 +167,7 @@ class LoginView(APIView):
 class SignupView(APIView):
     def post(self, request):
         try:
-            username, password = request.data['username'], request.data['password']
+            username, password, fname, lname, email= request.data['username'], request.data['password'], request.data['fname'], request.data['lname'], request.data['email']
         except KeyError as e:
             return Response({"error": f"Missing data: {e}"}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -178,10 +178,10 @@ class SignupView(APIView):
                     return Response({"error": "Username already exists"}, status=status.HTTP_400_BAD_REQUEST)
 
             signup_query = """
-            INSERT INTO users (username, password) VALUES (%s, %s)
+            INSERT INTO users (username, password, first_name, last_name, email) VALUES (%s, %s,%s,%s,%s)
             """
             with connection.cursor() as cursor:
-                cursor.execute(signup_query, [username, password])
+                cursor.execute(signup_query, [username, password, fname, lname, email])
 
             with connection.cursor() as cursor:
                 cursor.execute("SELECT * FROM users WHERE username = %s", [username])
@@ -189,6 +189,7 @@ class SignupView(APIView):
 
             return Response({"message": "Signup successful for user: {}".format(username), "token": user['user_id']}, status=status.HTTP_201_CREATED)
         except Exception as e:
+            print(e)
             return Response({"error": "Signup Failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 

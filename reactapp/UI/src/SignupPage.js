@@ -10,6 +10,9 @@ import Form from 'react-bootstrap/Form';
 const SignupPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [passwordsMatch, setPasswordsMatch] = useState(true);
@@ -25,7 +28,10 @@ const SignupPage = () => {
         try {
             const response = await axios.post('http://localhost:8000/api/signup/', {
                 username: username,
-                password: password
+                password: password,
+                fname: firstName,
+                lname:lastName,
+                email:email
             });
 
             if (response.data && response.data.token) {
@@ -76,6 +82,24 @@ const SignupPage = () => {
                             <Form.Control type="password" placeholder="Confirm password" value={confirmPassword} 
                                 onChange={handleConfirmPasswordChange} />
                             {!passwordsMatch && <Form.Text className="text-danger">Passwords do not match</Form.Text>}
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="firstName">
+                            <Form.Label>First Name</Form.Label>
+                            <Form.Control type="text" placeholder="Enter first name" value={firstName} 
+                                onChange={(e) => setFirstName(e.target.value)} />
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="lastName">
+                            <Form.Label>Last Name</Form.Label>
+                            <Form.Control type="text" placeholder="Enter last name" value={lastName} 
+                                onChange={(e) => setLastName(e.target.value)} />
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="email">
+                            <Form.Label>Email</Form.Label>
+                            <Form.Control type="text" placeholder="Enter email" value={email} 
+                                onChange={(e) => setEmail(e.target.value)} />
                         </Form.Group>
 
                         <Button variant="primary" type="submit">
