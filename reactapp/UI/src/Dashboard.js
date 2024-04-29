@@ -25,13 +25,17 @@ const styles = {
     button:{
         margin: '10px',
         flexDirection: 'column',
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
+        padding: '0.65em'
     }
 };
 
 const astyle = {
-    boxShadow: '0 0.0025px 0.0025px 0 rgba(0, 0, 0, 0.1)',
+    display : "inline",
+    boxShadow: '10px 5px 5px white',
+    border: '2px solid black',
     margin: '5px',
+    padding: '0.5em'
 };
 
 
@@ -49,13 +53,11 @@ const ListItem = ({ item, addToFavorites }) => {
       </div>
       <div style={styles.meta}>
           {arr.map((category, index) => (
-            <a href={`/${category}`} key={index} style = {astyle}>
-              {category}
-            </a>
+            <p key={index} style = {astyle}>{category}</p>
           ))}
           <span style={styles.date}>{item.update_date}</span>
-      </div>
-      <div style={styles.actions}>
+      
+      
         <button style={styles.button} onClick={() => addToFavorites(item.paper_id)}>
           Add to Favorites
         </button>
