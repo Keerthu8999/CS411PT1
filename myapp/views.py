@@ -37,7 +37,9 @@ def get_all_papers(request):
             join paper_categories on papers.paper_id = paper_categories.paper_id
             join categories on paper_categories.category_id = categories.category_id
             where papers.abstract like %s
-            group by papers.paper_id LIMIT 15'''
+            group by papers.paper_id 
+            order by papers.update_date desc
+            LIMIT 15'''
             value = f"%{tex}%"
             cursor.execute(raw_query, (value,))
         elif val == 'author':
@@ -50,7 +52,24 @@ def get_all_papers(request):
             join paper_categories on papers.paper_id = paper_categories.paper_id
             join categories on paper_categories.category_id = categories.category_id
             where authors.name like %s
-            group by papers.paper_id LIMIT 15'''
+            group by papers.paper_id 
+            order by papers.update_date desc
+            LIMIT 15'''
+            value = f"%{tex}%"
+            cursor.execute(raw_query, (value,))
+        elif val == 'category':
+            raw_query = '''
+            SELECT papers.paper_id, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS names,
+            title, update_date, 
+            GROUP_CONCAT(DISTINCT categories.category_description ORDER BY categories.category_description SEPARATOR '; ') AS categories
+            from papers join paper_authors on papers.paper_id = paper_authors.paper_id 
+            join authors on authors.author_id = paper_authors.author_id 
+            join paper_categories on papers.paper_id = paper_categories.paper_id
+            join categories on paper_categories.category_id = categories.category_id
+            where categories.category_full_des like %s
+            group by papers.paper_id 
+            order by papers.update_date desc
+            LIMIT 15'''
             value = f"%{tex}%"
             cursor.execute(raw_query, (value,))
         else:
