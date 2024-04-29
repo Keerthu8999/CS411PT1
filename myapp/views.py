@@ -49,8 +49,10 @@ def get_user_profile(request):
 def get_all_papers(request):
     val = request.GET.get('val', None)
     tex = request.GET.get('text', None)
-    print(val, tex)
-    args = [ uname]
+    cur = request.GET.get('currentPage', None)
+    print(val, tex, cur)
+    ints = int(cur) * 15
+    args = [ uname, ints]
     print(request.body)
     if request.body and json.loads(request.body):
         print (json.loads(request.body))
@@ -67,9 +69,9 @@ def get_all_papers(request):
             where papers.abstract like %s
             group by papers.paper_id 
             order by papers.update_date desc
-            LIMIT 15'''
+            LIMIT 15 OFFSET %s'''
             value = f"%{tex}%"
-            cursor.execute(raw_query, (value,))
+            cursor.execute(raw_query, (value,ints))
         elif val == 'author':
             raw_query = '''
             SELECT papers.paper_id, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS names,
@@ -82,9 +84,9 @@ def get_all_papers(request):
             where authors.name like %s
             group by papers.paper_id 
             order by papers.update_date desc
-            LIMIT 15'''
+            LIMIT 15 OFFSET %s'''
             value = f"%{tex}%"
-            cursor.execute(raw_query, (value,))
+            cursor.execute(raw_query, (value,ints))
         elif val == 'category':
             raw_query = '''
             SELECT papers.paper_id, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS names,
@@ -97,9 +99,11 @@ def get_all_papers(request):
             where categories.category_full_des like %s
             group by papers.paper_id 
             order by papers.update_date desc
-            LIMIT 15'''
+            LIMIT 15 OFFSET %s'''
+            
+            
             value = f"%{tex}%"
-            cursor.execute(raw_query, (value,))
+            cursor.execute(raw_query, (value,ints, ))
         else:
             cursor.callproc("paperpilot.homepage", args)
         result_set = cursor.fetchall()

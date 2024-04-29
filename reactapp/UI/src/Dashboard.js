@@ -25,12 +25,33 @@ const styles = {
     button:{
         margin: '10px',
         flexDirection: 'column',
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
+        padding: '0.65em'
     }
 };
 
+const astyle = {
+    display : "inline",
+    boxShadow: '10px 5px 5px white',
+    border: '2px solid black',
+    margin: '5px',
+    padding: '0.5em'
+};
+
+
+const buttons = {
+    margin: '10px',
+    justifyContent:'center',
+    alignItems: 'center',
+    padding: '0.65em'
+};
+
 const ListItem = ({ item, addToFavorites }) => {
-    console.log(item)
+  console.log(item)
+  console.log(item.category)
+  let str = item.category;
+  const arr = str ? str.split(';').map(item => item.trim()) : [];
+  console.log(arr);
   return (
     <div style={styles.card}>
       <div style={styles.content}>
@@ -38,12 +59,12 @@ const ListItem = ({ item, addToFavorites }) => {
         <p style={styles.main}>{item.names}</p>
       </div>
       <div style={styles.meta}>
-          <Link to={``} style={styles.link}>
-            {item.category}
-          </Link>
+          {arr.map((category, index) => (
+            <p key={index} style = {astyle}>{category}</p>
+          ))}
           <span style={styles.date}>{item.update_date}</span>
-        </div>
-      <div style={styles.actions}>
+      
+      
         <button style={styles.button} onClick={() => addToFavorites(item.paper_id)}>
           Add to Favorites
         </button>
@@ -56,25 +77,32 @@ const Dashboard = () => {
     const [papers, setPapers] = useState([]);
     const [favorites, setFavorites] = useState([]);
     const [searchText, setSearchText] = useState("");
+    const [currentPage, setCurrentPage ] = useState(1);
+    const [numPages, setNumPages] = useState(0);
+    const [currentFilter, setCurrentFilter] = useState('general');
   
     const handleSearchInput = (event) => {
       setSearchText(event.target.value);
     };
+
   
-    const fetchData = async (value, text) => {
+    const fetchData = async (currentPage, value, text) => {
+      setCurrentFilter(value);
       try {
         console.log(value);
-        const params = { val: value, text: text};
+        console.log(currentPage);
+        const params = { val: value, text: text, currentPage: currentPage};
         const response = await axios.get('http://localhost:8000/api/get_all_papers/', {params});
         setPapers(response.data);
+
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
   
     useEffect(() => {
-      fetchData('general');
-    }, []);
+      fetchData(currentPage, currentFilter, searchText);
+    }, [currentPage, currentFilter, searchText]);
 
   const addToFavorites = async (id) => {
     let userId = localStorage.getItem('userId');
@@ -101,18 +129,21 @@ const Dashboard = () => {
             />
             </Form>
             <NavDropdown title="Search" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#keywordsearch" onClick={() => fetchData('keyword', searchText)}>Keyword</NavDropdown.Item>
-              <NavDropdown.Item href="#journalsearch" onClick={() => fetchData('journal', searchText)}>Journal</NavDropdown.Item>
-              <NavDropdown.Item href="#authorsearch"  onClick={() => fetchData('author', searchText)}>Author</NavDropdown.Item>
-              <NavDropdown.Item href="#categorysearch" onClick={() => fetchData('category', searchText)}>Category</NavDropdown.Item>
+              <NavDropdown.Item href="#keywordsearch" onClick={() => fetchData(currentPage, 'keyword', searchText)}>Keyword</NavDropdown.Item>
+              <NavDropdown.Item href="#journalsearch" onClick={() => fetchData(currentPage, 'journal', searchText)}>Journal</NavDropdown.Item>
+              <NavDropdown.Item href="#authorsearch"  onClick={() => fetchData(currentPage, 'author', searchText)}>Author</NavDropdown.Item>
+              <NavDropdown.Item href="#categorysearch" onClick={() => fetchData(currentPage, 'category', searchText)}>Category</NavDropdown.Item>
             </NavDropdown> 
       </header>
       <main>
         {papers.map((item) => (
           <ListItem key={item.paper_id} item={item} addToFavorites={addToFavorites} />
         ))}
+
       </main>
       <footer>
+        <button onClick={() => setCurrentPage(currentPage - 1)} style = {buttons}>Previous</button>
+        <button onClick={() => setCurrentPage(currentPage + 1)} style = {buttons}>Next</button>
       </footer>
     </div>
   );
