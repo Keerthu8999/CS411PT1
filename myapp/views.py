@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-
+global uname
 def dictfetchall(cursor):
     """
     Return all rows from a cursor as a dict.
@@ -19,19 +19,18 @@ def dictfetchall(cursor):
 
 
 def get_all_papers(request):
-    raw_query = """
-    SELECT papers.paper_id, papers.submitter, papers.title, papers.update_date, categories.category_description
-    FROM papers join paper_categories on papers.paper_id = paper_categories.paper_id
-    JOIN categories on paper_categories.category_id = categories.category_id
-    LIMIT 15
-    """
-
+    #print(request)
+    #data = json.loads(request.body)
+    #args = [data['user_id']]
+    
+    #print(data['user_id'])
+    args = [ uname ]
     with connection.cursor() as cursor:
-        cursor.execute(raw_query)
+        cursor.callproc("paperpilot.homepage", args)
         result_set = cursor.fetchall()
 
     response = [
-        {'paper_id': row[0], 'submitter': row[1], 'title': row[2], 'update_date': row[3], 'category': row[4]}
+        {'names': row[0], 'title': row[1], 'update_date': row[2], 'category': row[3]}
         for row in result_set
     ]
 
@@ -108,6 +107,9 @@ class LoginView(APIView):
             with connection.cursor() as cursor:
                 cursor.execute(login_query, [username, password])
             user = dictfetchall(cursor)[0]
+            global uname
+            uname = user['username']
+            
             print(user)
         except Exception as e:
             return Response({"error": "Invalid user details"}, status=status.HTTP_401_UNAUTHORIZED)

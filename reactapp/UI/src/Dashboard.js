@@ -34,7 +34,7 @@ const ListItem = ({ item, addToFavorites }) => {
     <div style={styles.card}>
       <div style={styles.content}>
         <h2 style={styles.title}>{item.title}</h2>
-        <p style={styles.main}>{item.submitter}</p>
+        <p style={styles.main}>{item.names}</p>
       </div>
       <div style={styles.meta}>
           <Link to={``} style={styles.link}>
@@ -52,13 +52,15 @@ const ListItem = ({ item, addToFavorites }) => {
 };
 
 const Dashboard = () => {
+  let userId = localStorage.getItem('userId');
+  let dataObject = { user_id: userId };
   const [papers, setPapers] = useState([]);
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/get_all_papers/');
+        const response = await axios.get('http://localhost:8000/api/get_all_papers/', dataObject);
         setPapers(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
