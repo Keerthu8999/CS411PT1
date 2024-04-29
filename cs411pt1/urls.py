@@ -18,10 +18,12 @@ from django.urls import path
 from myapp import views
 from myapp.views import paper_statistics
 from myapp.views import LoginView
+from myapp.views import SignupView
 from django.contrib import admin
 
 urlpatterns = [
     path('api/login/', LoginView.as_view(), name='login'),
+    path('api/signup/', SignupView.as_view(), name='signup'),
     path('admin/', admin.site.urls),
     path('', views.paper_statistics, name='article-data'),
     path('api/post_data/', views.post_data, name='post-data'),

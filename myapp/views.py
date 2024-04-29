@@ -164,4 +164,31 @@ class LoginView(APIView):
 
         return Response({"message": "Login successful for user: {}".format(username), "token": user['user_id']}, status=status.HTTP_200_OK)
 
+class SignupView(APIView):
+    def post(self, request):
+        try:
+            username, password = request.data['username'], request.data['password']
+        except KeyError as e:
+            return Response({"error": f"Missing data: {e}"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM users WHERE username = %s", [username])
+                if cursor.fetchone():
+                    return Response({"error": "Username already exists"}, status=status.HTTP_400_BAD_REQUEST)
+
+            signup_query = """
+            INSERT INTO users (username, password) VALUES (%s, %s)
+            """
+            with connection.cursor() as cursor:
+                cursor.execute(signup_query, [username, password])
+
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM users WHERE username = %s", [username])
+            user = dictfetchall(cursor)[0]
+
+            return Response({"message": "Signup successful for user: {}".format(username), "token": user['user_id']}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"error": "Signup Failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 

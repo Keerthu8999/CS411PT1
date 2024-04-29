@@ -6,6 +6,7 @@ import LoginPage from './Login';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import HeaderNav from './Navbar';
 import Dashboard from './Dashboard';
+import SignupPage from './SignupPage';
 
 
 const RootComponent = () => {
@@ -26,6 +27,14 @@ function App() {
             path: "/login",
             element: <LoginPage />
         },
+        {
+            path: "/signup",
+            element: <SignupPage />
+        },
+        // {
+        //     path: "/userprofile",
+        //     element: <UserProfile />
+        // },
         {
             path: "/main",
             element: <Container>
