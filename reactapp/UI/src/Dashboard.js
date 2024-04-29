@@ -29,8 +29,18 @@ const styles = {
     }
 };
 
+const astyle = {
+    boxShadow: '0 0.0025px 0.0025px 0 rgba(0, 0, 0, 0.1)',
+    margin: '5px',
+};
+
+
 const ListItem = ({ item, addToFavorites }) => {
-    console.log(item)
+  console.log(item)
+  console.log(item.category)
+  let str = item.category;
+  const arr = str ? str.split(';').map(item => item.trim()) : [];
+  console.log(arr);
   return (
     <div style={styles.card}>
       <div style={styles.content}>
@@ -38,11 +48,13 @@ const ListItem = ({ item, addToFavorites }) => {
         <p style={styles.main}>{item.names}</p>
       </div>
       <div style={styles.meta}>
-          <Link to={``} style={styles.link}>
-            {item.category}
-          </Link>
+          {arr.map((category, index) => (
+            <a href={`/${category}`} key={index} style = {astyle}>
+              {category}
+            </a>
+          ))}
           <span style={styles.date}>{item.update_date}</span>
-        </div>
+      </div>
       <div style={styles.actions}>
         <button style={styles.button} onClick={() => addToFavorites(item.paper_id)}>
           Add to Favorites
@@ -73,7 +85,6 @@ const Dashboard = () => {
         const params = { val: value, text: text, currentPage: currentPage};
         const response = await axios.get('http://localhost:8000/api/get_all_papers/', {params});
         setPapers(response.data);
-        setNumPages(currentPage);
 
       } catch (error) {
         console.error('Error fetching data:', error);

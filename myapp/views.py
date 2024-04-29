@@ -41,9 +41,9 @@ def get_all_papers(request):
             where papers.abstract like %s
             group by papers.paper_id 
             order by papers.update_date desc
-            LIMIT 15'''
+            LIMIT 15 OFFSET %s'''
             value = f"%{tex}%"
-            cursor.execute(raw_query, (value,))
+            cursor.execute(raw_query, (value,ints))
         elif val == 'author':
             raw_query = '''
             SELECT papers.paper_id, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS names,
@@ -56,9 +56,9 @@ def get_all_papers(request):
             where authors.name like %s
             group by papers.paper_id 
             order by papers.update_date desc
-            LIMIT 15'''
+            LIMIT 15 OFFSET %s'''
             value = f"%{tex}%"
-            cursor.execute(raw_query, (value,))
+            cursor.execute(raw_query, (value,ints))
         elif val == 'category':
             raw_query = '''
             SELECT papers.paper_id, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS names,
@@ -75,7 +75,6 @@ def get_all_papers(request):
             
             
             value = f"%{tex}%"
-            print(raw_query)
             cursor.execute(raw_query, (value,ints, ))
         else:
             cursor.callproc("paperpilot.homepage", args)
