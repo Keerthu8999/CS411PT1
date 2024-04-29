@@ -104,7 +104,7 @@ const Dashboard = () => {
               <NavDropdown.Item href="#keywordsearch" onClick={() => fetchData('keyword', searchText)}>Keyword</NavDropdown.Item>
               <NavDropdown.Item href="#journalsearch" onClick={() => fetchData('journal', searchText)}>Journal</NavDropdown.Item>
               <NavDropdown.Item href="#authorsearch"  onClick={() => fetchData('author', searchText)}>Author</NavDropdown.Item>
-              <NavDropdown.Item href="categorysearch" onClick={() => fetchData('category', searchText)}>Category</NavDropdown.Item>
+              <NavDropdown.Item href="#categorysearch" onClick={() => fetchData('category', searchText)}>Category</NavDropdown.Item>
             </NavDropdown> 
       </header>
       <main>
