@@ -56,25 +56,31 @@ const Dashboard = () => {
     const [papers, setPapers] = useState([]);
     const [favorites, setFavorites] = useState([]);
     const [searchText, setSearchText] = useState("");
+    const [currentPage, setCurrentPage ] = useState(1);
+    const [numPages, setNumPages] = useState(0);
   
     const handleSearchInput = (event) => {
       setSearchText(event.target.value);
     };
+
   
-    const fetchData = async (value, text) => {
+    const fetchData = async (currentPage, value, text) => {
       try {
         console.log(value);
+        console.log(currentPage);
         const params = { val: value, text: text};
         const response = await axios.get('http://localhost:8000/api/get_all_papers/', {params});
         setPapers(response.data);
+        setNumPages(currentPage);
+
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
   
     useEffect(() => {
-      fetchData('general');
-    }, []);
+      fetchData(currentPage, 'general');
+    }, [currentPage]);
 
   const addToFavorites = async (id) => {
     let userId = localStorage.getItem('userId');
@@ -101,18 +107,21 @@ const Dashboard = () => {
             />
             </Form>
             <NavDropdown title="Search" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#keywordsearch" onClick={() => fetchData('keyword', searchText)}>Keyword</NavDropdown.Item>
-              <NavDropdown.Item href="#journalsearch" onClick={() => fetchData('journal', searchText)}>Journal</NavDropdown.Item>
-              <NavDropdown.Item href="#authorsearch"  onClick={() => fetchData('author', searchText)}>Author</NavDropdown.Item>
-              <NavDropdown.Item href="#categorysearch" onClick={() => fetchData('category', searchText)}>Category</NavDropdown.Item>
+              <NavDropdown.Item href="#keywordsearch" onClick={() => fetchData(currentPage, 'keyword', searchText)}>Keyword</NavDropdown.Item>
+              <NavDropdown.Item href="#journalsearch" onClick={() => fetchData(currentPage, 'journal', searchText)}>Journal</NavDropdown.Item>
+              <NavDropdown.Item href="#authorsearch"  onClick={() => fetchData(currentPage, 'author', searchText)}>Author</NavDropdown.Item>
+              <NavDropdown.Item href="#categorysearch" onClick={() => fetchData(currentPage, 'category', searchText)}>Category</NavDropdown.Item>
             </NavDropdown> 
       </header>
       <main>
         {papers.map((item) => (
           <ListItem key={item.paper_id} item={item} addToFavorites={addToFavorites} />
         ))}
+
       </main>
       <footer>
+        <button onClick={() => setCurrentPage(currentPage - 1)}>Previous</button>
+        <button onClick={() => setCurrentPage(currentPage + 1)}>Next</button>
       </footer>
     </div>
   );
