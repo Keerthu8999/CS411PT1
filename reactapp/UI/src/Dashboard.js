@@ -52,15 +52,13 @@ const ListItem = ({ item, addToFavorites }) => {
 };
 
 const Dashboard = () => {
-  let userId = localStorage.getItem('userId');
-  let dataObject = { user_id: userId };
   const [papers, setPapers] = useState([]);
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/get_all_papers/', dataObject);
+        const response = await axios.get('http://localhost:8000/api/get_all_papers/');
         setPapers(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -72,7 +70,7 @@ const Dashboard = () => {
   const addToFavorites = async (id) => {
     let userId = localStorage.getItem('userId');
     let dataObject = { user_id: userId, paper_id: id };
-
+    console.log(dataObject)
     try {
       const response = await axios.post('http://localhost:8000/api/post_upp/', dataObject);
       console.log(response.data);

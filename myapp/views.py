@@ -30,7 +30,7 @@ def get_all_papers(request):
         result_set = cursor.fetchall()
 
     response = [
-        {'names': row[0], 'title': row[1], 'update_date': row[2], 'category': row[3]}
+        {'paper_id': row[0], 'names': row[1], 'title': row[2], 'update_date': row[3], 'category': row[4]}
         for row in result_set
     ]
 
@@ -83,6 +83,7 @@ def post_upp(request):
                 if row is not None:
                     user_id = row[0]
                     sql = """INSERT INTO user_preferred_papers (user_id, paper_id, preference_ranking) VALUES (%s, %s, %s)"""
+                    print(data, user_id, data['paper_id'])
                     cursor.execute(sql, [user_id, data['paper_id'], 1])
                     connection.commit()
                     return JsonResponse({'status': 'success', 'user_id': user_id}, status=200)
