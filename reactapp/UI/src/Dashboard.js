@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { Button } from "@material-tailwind/react";
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import {Form, FormControl, Button} from 'react-bootstrap'
 
 const styles = {
     card: {
@@ -52,20 +53,28 @@ const ListItem = ({ item, addToFavorites }) => {
 };
 
 const Dashboard = () => {
-  const [papers, setPapers] = useState([]);
-  const [favorites, setFavorites] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
+    const [papers, setPapers] = useState([]);
+    const [favorites, setFavorites] = useState([]);
+    const [searchText, setSearchText] = useState("");
+  
+    const handleSearchInput = (event) => {
+      setSearchText(event.target.value);
+    };
+  
+    const fetchData = async (value, text) => {
       try {
-        const response = await axios.get('http://localhost:8000/api/get_all_papers/');
+        console.log(value);
+        const params = { val: value, text: text};
+        const response = await axios.get('http://localhost:8000/api/get_all_papers/', {params});
         setPapers(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-    fetchData();
-  }, []);
+  
+    useEffect(() => {
+      fetchData('general');
+    }, []);
 
   const addToFavorites = async (id) => {
     let userId = localStorage.getItem('userId');
@@ -82,6 +91,21 @@ const Dashboard = () => {
   return (
     <div>
       <header>
+      <Form inline>
+            <FormControl
+              onChange={handleSearchInput}
+              value={searchText}
+              type="text"
+              placeholder="Enter"
+              className="mr-sm-2"
+            />
+            </Form>
+            <NavDropdown title="Search" id="basic-nav-dropdown">
+              <NavDropdown.Item href="#keywordsearch" onClick={() => fetchData('keyword', searchText)}>Keyword</NavDropdown.Item>
+              <NavDropdown.Item href="#journalsearch" onClick={() => fetchData('journal', searchText)}>Journal</NavDropdown.Item>
+              <NavDropdown.Item href="#authorsearch"  onClick={() => fetchData('author', searchText)}>Author</NavDropdown.Item>
+              <NavDropdown.Item href="categorysearch" onClick={() => fetchData('category', searchText)}>Category</NavDropdown.Item>
+            </NavDropdown> 
       </header>
       <main>
         {papers.map((item) => (

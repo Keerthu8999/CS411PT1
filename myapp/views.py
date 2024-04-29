@@ -19,14 +19,42 @@ def dictfetchall(cursor):
 
 
 def get_all_papers(request):
-    #print(request)
-    #data = json.loads(request.body)
-    #args = [data['user_id']]
-    
-    #print(data['user_id'])
-    args = [ uname ]
+    val = request.GET.get('val', None)
+    tex = request.GET.get('text', None)
+    print(val, tex)
+    args = [ uname]
+    print(request.body)
+    if request.body and json.loads(request.body):
+        print (json.loads(request.body))
     with connection.cursor() as cursor:
-        cursor.callproc("paperpilot.homepage", args)
+        if val == 'keyword':
+            raw_query = '''
+            SELECT papers.paper_id, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS names,
+            title, update_date, 
+            GROUP_CONCAT(DISTINCT categories.category_description ORDER BY categories.category_description SEPARATOR '; ') AS categories
+            from papers join paper_authors on papers.paper_id = paper_authors.paper_id 
+            join authors on authors.author_id = paper_authors.author_id 
+            join paper_categories on papers.paper_id = paper_categories.paper_id
+            join categories on paper_categories.category_id = categories.category_id
+            where papers.abstract like %s
+            group by papers.paper_id LIMIT 15'''
+            value = f"%{tex}%"
+            cursor.execute(raw_query, (value,))
+        elif val == 'author':
+            raw_query = '''
+            SELECT papers.paper_id, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS names,
+            title, update_date, 
+            GROUP_CONCAT(DISTINCT categories.category_description ORDER BY categories.category_description SEPARATOR '; ') AS categories
+            from papers join paper_authors on papers.paper_id = paper_authors.paper_id 
+            join authors on authors.author_id = paper_authors.author_id 
+            join paper_categories on papers.paper_id = paper_categories.paper_id
+            join categories on paper_categories.category_id = categories.category_id
+            where authors.name like %s
+            group by papers.paper_id LIMIT 15'''
+            value = f"%{tex}%"
+            cursor.execute(raw_query, (value,))
+        else:
+            cursor.callproc("paperpilot.homepage", args)
         result_set = cursor.fetchall()
 
     response = [

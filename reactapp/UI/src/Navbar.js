@@ -2,8 +2,18 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import {Form, FormControl, Button} from 'react-bootstrap'
+import React, { useState } from 'react';
+import Dashboard from './Dashboard';
+import axios from "axios";
+
 
 function HeaderNav() {
+  const [searchText, setSearchText] = useState("");
+ const handleSearchInput = (event) => {
+    setSearchText(event.target.value);
+  };
+
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
@@ -23,8 +33,10 @@ function HeaderNav() {
               <NavDropdown.Item href="#action/3.4">
                 Separated link
               </NavDropdown.Item>
-            </NavDropdown>
+            </NavDropdown>          
           </Nav>
+          
+          
         </Navbar.Collapse>
       </Container>
     </Navbar>
