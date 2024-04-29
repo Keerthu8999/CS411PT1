@@ -58,6 +58,7 @@ const Dashboard = () => {
     const [searchText, setSearchText] = useState("");
     const [currentPage, setCurrentPage ] = useState(1);
     const [numPages, setNumPages] = useState(0);
+    const [currentFilter, setCurrentFilter] = useState('general');
   
     const handleSearchInput = (event) => {
       setSearchText(event.target.value);
@@ -65,10 +66,11 @@ const Dashboard = () => {
 
   
     const fetchData = async (currentPage, value, text) => {
+      setCurrentFilter(value);
       try {
         console.log(value);
         console.log(currentPage);
-        const params = { val: value, text: text};
+        const params = { val: value, text: text, currentPage: currentPage};
         const response = await axios.get('http://localhost:8000/api/get_all_papers/', {params});
         setPapers(response.data);
         setNumPages(currentPage);
@@ -79,8 +81,8 @@ const Dashboard = () => {
     };
   
     useEffect(() => {
-      fetchData(currentPage, 'general');
-    }, [currentPage]);
+      fetchData(currentPage, currentFilter, searchText);
+    }, [currentPage, currentFilter, searchText]);
 
   const addToFavorites = async (id) => {
     let userId = localStorage.getItem('userId');

@@ -21,7 +21,8 @@ def dictfetchall(cursor):
 def get_all_papers(request):
     val = request.GET.get('val', None)
     tex = request.GET.get('text', None)
-    print(val, tex)
+    cur = request.GET.get('currentPage', None)
+    print(val, tex, cur)
     args = [ uname]
     print(request.body)
     if request.body and json.loads(request.body):
@@ -69,9 +70,14 @@ def get_all_papers(request):
             where categories.category_full_des like %s
             group by papers.paper_id 
             order by papers.update_date desc
-            LIMIT 15'''
+            LIMIT 15 OFFSET %s'''
+            
+            ints = int(cur) * 15
+            print(ints)
+            val = int(ints)
             value = f"%{tex}%"
-            cursor.execute(raw_query, (value,))
+            print(raw_query)
+            cursor.execute(raw_query, (value,ints, ))
         else:
             cursor.callproc("paperpilot.homepage", args)
         result_set = cursor.fetchall()
