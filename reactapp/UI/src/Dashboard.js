@@ -102,7 +102,7 @@ const Dashboard = () => {
   
     useEffect(() => {
       fetchData(currentPage, currentFilter, searchText);
-    }, [currentPage, currentFilter, searchText]);
+    }, [currentPage, currentFilter]);
 
   const addToFavorites = async (id) => {
     let userId = localStorage.getItem('userId');
@@ -111,6 +111,7 @@ const Dashboard = () => {
     try {
       const response = await axios.post('http://localhost:8000/api/post_upp/', dataObject);
       console.log(response.data);
+      alert("Success!");
     } catch (error) {
       console.error('Error posting data:', error);
     }
