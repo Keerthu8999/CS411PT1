@@ -39,6 +39,13 @@ const astyle = {
 };
 
 
+const buttons = {
+    margin: '10px',
+    justifyContent:'center',
+    alignItems: 'center',
+    padding: '0.65em'
+};
+
 const ListItem = ({ item, addToFavorites }) => {
   console.log(item)
   console.log(item.category)
@@ -135,8 +142,8 @@ const Dashboard = () => {
 
       </main>
       <footer>
-        <button onClick={() => setCurrentPage(currentPage - 1)}>Previous</button>
-        <button onClick={() => setCurrentPage(currentPage + 1)}>Next</button>
+        <button onClick={() => setCurrentPage(currentPage - 1)} style = {buttons}>Previous</button>
+        <button onClick={() => setCurrentPage(currentPage + 1)} style = {buttons}>Next</button>
       </footer>
     </div>
   );
