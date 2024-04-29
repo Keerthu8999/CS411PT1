@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import HeaderNav from './Navbar';
 import Dashboard from './Dashboard';
 import SignupPage from './SignupPage';
+import UserProfilePage from './UserProfile';
 
 
 const RootComponent = () => {
@@ -31,10 +32,10 @@ function App() {
             path: "/signup",
             element: <SignupPage />
         },
-        // {
-        //     path: "/userprofile",
-        //     element: <UserProfile />
-        // },
+        {
+            path: "/userprofile",
+            element: <UserProfilePage />
+        },
         {
             path: "/main",
             element: <Container>

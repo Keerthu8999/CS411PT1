@@ -17,6 +17,34 @@ def dictfetchall(cursor):
     columns = [col[0] for col in cursor.description]
     return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
+def get_user_profile(request):
+    # id=request.GET.get('id', None)
+    id=1
+    try:
+        with connection.cursor() as cursor:
+            raw_query='''
+            SELECT username, password, first_name, last_name, email
+            from users
+            where user_id = %s
+            '''
+            print('Printing id', id)
+            cursor.execute(raw_query,(id,))
+            result=cursor.fetchall()
+            print(result)
+            response={'username':result[0][0], 'password':result[0][1], 'first_name':result[0][2],'last_name':result[0][3],'email':result[0][4]}
+            return JsonResponse(response, status=200)
+    except Exception as e:
+        print(e)
+
+# def get_user_preferred_category(request):
+#     id=request.GET.get('id', None)
+#     with connection.cursor() as cursor:
+#         raw_query='''
+#         SELECT 
+
+#         '''
+    
+
 
 def get_all_papers(request):
     val = request.GET.get('val', None)

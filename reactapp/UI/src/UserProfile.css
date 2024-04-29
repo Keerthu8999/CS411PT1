@@ -1,0 +1,33 @@
+/* UserProfilePage.css */
+
+.vh-100 {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auto-center {
+    width: 100%;
+    margin: 0;
+}
+
+.user-profile {
+    text-align: center;
+    color: rgb(33, 37, 41); /* Match sidebar text color */
+}
+
+.user-profile h1 {
+    font-size: 2rem; /* Adjust as needed */
+    margin-bottom: 20px;
+}
+
+.user-profile p {
+    margin-bottom: 10px;
+}
+
+.user-profile .user-info {
+    margin-bottom: 30px;
+}
+
+/* Additional styling if needed */
