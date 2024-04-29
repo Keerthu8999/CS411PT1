@@ -23,7 +23,8 @@ def get_all_papers(request):
     tex = request.GET.get('text', None)
     cur = request.GET.get('currentPage', None)
     print(val, tex, cur)
-    args = [ uname]
+    ints = int(cur) * 15
+    args = [ uname, ints]
     print(request.body)
     if request.body and json.loads(request.body):
         print (json.loads(request.body))
@@ -72,9 +73,7 @@ def get_all_papers(request):
             order by papers.update_date desc
             LIMIT 15 OFFSET %s'''
             
-            ints = int(cur) * 15
-            print(ints)
-            val = int(ints)
+            
             value = f"%{tex}%"
             print(raw_query)
             cursor.execute(raw_query, (value,ints, ))
