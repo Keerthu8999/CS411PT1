@@ -34,7 +34,15 @@ function App() {
         },
         {
             path: "/userprofile",
-            element: <UserProfilePage />
+            element: <Container>
+            <Row>
+                <HeaderNav />
+            </Row>
+            <Row>
+            <UserProfilePage />
+            </Row>
+            </Container>
+            
         },
         {
             path: "/main",

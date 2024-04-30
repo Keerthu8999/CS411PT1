@@ -29,5 +29,9 @@ urlpatterns = [
     path('api/post_data/', views.post_data, name='post-data'),
     path('api/post_upp/', views.post_upp, name='post_upp'),
     path('api/get_all_papers/', views.get_all_papers, name = 'get_all_papers'),
-    path('api/get_user_profile/', views.get_user_profile, name = 'get_user_profile')
+    path('api/get_user_profile/', views.get_user_profile, name = 'get_user_profile'),
+    path('api/update_user_profile/', views.update_user_profile, name = 'update_user_profile'),
+    path('api/user_pref_categories/', views.get_user_pref_categories, name = 'get_user_pref_cat'),
+    path('api/user_pref_papers/', views.get_user_pref_papers, name = 'get_user_pref_papers'),
+    path('api/delete_papers/<int:user_id>/', views.delete_papers, name = 'delete_pref_papers')
 ]

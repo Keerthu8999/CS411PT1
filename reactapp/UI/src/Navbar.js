@@ -35,8 +35,9 @@ function HeaderNav() {
               </NavDropdown.Item>
             </NavDropdown>          
           </Nav>
-          
-          
+          <Nav>
+            <Nav.Link href="/userprofile" className="ml-auto">User Profile</Nav.Link>
+          </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>

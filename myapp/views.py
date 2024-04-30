@@ -18,8 +18,7 @@ def dictfetchall(cursor):
     return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
 def get_user_profile(request):
-    # id=request.GET.get('id', None)
-    id=1
+    id=request.GET.get('id', None)
     try:
         with connection.cursor() as cursor:
             raw_query='''
@@ -43,8 +42,49 @@ def get_user_profile(request):
 #         SELECT 
 
 #         '''
-    
+def get_user_pref_categories(request):
+    id=request.GET.get('id', None)
+    print("pref cat id",id)
+    try:
+        with connection.cursor() as cursor:
+            raw_query='''
+            SELECT category_description
+            from user_preferred_categories join categories on user_preferred_categories.category_id=categories.category_id
+            where user_id = %s
+            '''
+            print('Printing id', id)
+            cursor.execute(raw_query,(id,))
+            result=cursor.fetchall()
+            print(result)
+            response = [
+        {'category_name': row[0]}
+        for row in result
+         ]
+        return JsonResponse(response, safe=False, status=200)
+    except Exception as e:
+        print(e)
 
+def get_user_pref_papers(request):
+    id=request.GET.get('id', None)
+    print("pref cat id",id)
+    try:
+        with connection.cursor() as cursor:
+            raw_query='''
+            SELECT papers.paper_id, title, paper_link
+            from user_preferred_papers join papers on user_preferred_papers.paper_id=papers.paper_id
+            where user_id = %s
+            '''
+            print('Printing id', id)
+            cursor.execute(raw_query,(id,))
+            result=cursor.fetchall()
+            print(result)
+            response = [
+        {'title': row[1],'link':row[2],'id':row[0]}
+        for row in result
+         ]
+        return JsonResponse(response, safe=False, status=200)
+    except Exception as e:
+        print(e)
 
 def get_all_papers(request):
     val = request.GET.get('val', None)
@@ -224,4 +264,61 @@ class SignupView(APIView):
             print(e)
             return Response({"error": "Signup Failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+@csrf_exempt
+def update_user_profile(request):
+    try:
+        # Parse request data
+        # data = request.PUT # Assuming data is sent in the request body
+        body_unicode = request.body.decode('utf-8')
+        data = json.loads(body_unicode)
 
+        user_id = data.get('id', None)
+        username = data.get('username', None)
+        password = data.get('password', None)
+        first_name = data.get('first_name', None)
+        last_name = data.get('last_name', None)
+        email = data.get('email', None)
+
+        print('printing data',data)
+        print('details',user_id,username,password, first_name,last_name,email)
+
+        with connection.cursor() as cursor:
+            cursor.execute('''
+                UPDATE users
+                SET username = %s, password = %s, first_name = %s, last_name = %s, email = %s
+                WHERE user_id = %s
+            ''', [username, password, first_name, last_name, email, user_id])
+
+        return JsonResponse({'message': 'User profile updated successfully'}, status=200)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+    
+
+@csrf_exempt
+def delete_papers(request, user_id):
+    if request.method == 'PUT':
+        try:
+            with connection.cursor() as cursor:
+                # Assuming the paper IDs to delete are sent in the request body as a list
+                data = json.loads(request.body)
+                paper_ids = data.get('papers', [])
+                # user_id=data.get('id',None)
+
+                print("Deletion",user_id)
+                print(paper_ids)
+
+                # Construct the SQL query to delete preferred papers based on their IDs
+                sql_query = '''DELETE FROM user_preferred_papers WHERE paper_id IN %s and user_id=%s'''
+                
+                # Execute the SQL query
+                cursor.execute(sql_query, [tuple(paper_ids),user_id])
+
+                # Commit the transaction
+                connection.commit()
+
+                return JsonResponse({'message': 'Preferred papers deleted successfully'}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+      
