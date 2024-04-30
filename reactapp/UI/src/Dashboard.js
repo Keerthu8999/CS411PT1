@@ -5,46 +5,80 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import {Form, FormControl, Button} from 'react-bootstrap'
 
 const styles = {
-    card: {
-        backgroundColor: '#fff',
-        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.1)',
-        borderRadius: '10px',
-        padding: '20px',
-        margin: '10px',
-        maxWidth: '100%',
-        minHeight: '20%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        border: '1px solid #ddd'
-    },
-    link: {
-        boxShadow: '0 0.5px 0.5px 0 rgba(0, 0, 0, 0.1)',
-        margin: '10px',
-    },
-    button:{
-        margin: '10px',
-        flexDirection: 'column',
-        alignItems: 'flex-end',
-        padding: '0.65em'
-    }
-};
-
-const astyle = {
-    display : "inline",
-    boxShadow: '10px 5px 5px white',
-    border: '2px solid black',
-    margin: '5px',
-    padding: '0.5em'
+  card: {
+      backgroundColor: '#fff',
+      boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.1)',
+      borderRadius: '10px',
+      padding: '20px',
+      margin: '10px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      border: '1px solid #ddd',
+      maxWidth: '100%',
+      width: '2048px'
+  },
+  content: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-start'
+  },
+  title: {
+      marginBottom: '5px',
+      fontWeight: 'bold',
+      fontSize: '1.5em',
+  },
+  main: {
+      marginBottom: '5px',
+      fontSize: '1em',
+  },
+  categories: {
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      marginBottom: '5px'
+  },
+  astyle: {
+      boxShadow: '0 5px 5px rgba(0, 0, 0, 0.1)',
+      border: '2px solid black',
+      margin: '5px',
+      padding: '0.5em',
+      alignItems: 'center'
+  },
+  date: {
+      marginBottom: '5px',
+  },
+  link: {
+      textDecoration: 'none',
+      color: '#1a0dab',
+      fontWeight: '500',
+  },
+  button: {
+      padding: '10px 20px',
+      background: '#4CAF50',
+      color: 'white',
+      border: 'none',
+      cursor: 'pointer',
+      fontSize: '1em',
+      borderRadius: '5px',
+      marginLeft: '10px',
+  },
+  rightAlign: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-end'
+  }
 };
 
 
 const buttons = {
-    margin: '10px',
-    justifyContent:'center',
-    alignItems: 'center',
-    padding: '0.65em'
+  margin: '10px',
+  justifyContent:'center',
+  alignItems: 'center',
+  padding: '0.65em'
 };
+
 
 const ListItem = ({ item, addToFavorites }) => {
   console.log(item)
@@ -53,23 +87,26 @@ const ListItem = ({ item, addToFavorites }) => {
   const arr = str ? str.split(';').map(item => item.trim()) : [];
   console.log(arr);
   return (
-    <div style={styles.card}>
-      <div style={styles.content}>
-        <h2 style={styles.title}>{item.title}</h2>
-        <p style={styles.main}>{item.names}</p>
+      <div style={styles.card}>
+          <div style={styles.content}>
+              <h2 style={styles.title}>{item.title}</h2>
+              <p style={styles.main}>{item.names}</p>
+              <div style={styles.categories}>
+                  {arr.map((category, index) => (
+                      <p key={index} style={styles.astyle}>{category}</p>
+                  ))}
+              </div>
+              <span style={styles.date}>Last Updated : {item.update_date.split('T')[0]}</span>
+          </div>
+          <div style={styles.rightAlign}>
+              <a href={item.link} style={styles.link}>Link to paper</a>
+              <button style={styles.button} onClick={() => addToFavorites(item.paper_id)}>
+                  Add to Favorites
+              </button>
+          </div>
       </div>
-      <div style={styles.meta}>
-          {arr.map((category, index) => (
-            <p key={index} style = {astyle}>{category}</p>
-          ))}
-          <span style={styles.date}>{item.update_date}</span>
-      
-      
-        <button style={styles.button} onClick={() => addToFavorites(item.paper_id)}>
-          Add to Favorites
-        </button>
-      </div>
-    </div>
+
+
   );
 };
 

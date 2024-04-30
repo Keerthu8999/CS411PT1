@@ -103,7 +103,8 @@ def get_all_papers(request):
             raw_query = '''
             SELECT papers.paper_id, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS names,
             title, update_date, 
-            GROUP_CONCAT(DISTINCT categories.category_description ORDER BY categories.category_description SEPARATOR '; ') AS categories
+            GROUP_CONCAT(DISTINCT categories.category_description ORDER BY categories.category_description SEPARATOR '; ') AS categories,
+            papers.paper_link
             from papers join paper_authors on papers.paper_id = paper_authors.paper_id 
             join authors on authors.author_id = paper_authors.author_id 
             join paper_categories on papers.paper_id = paper_categories.paper_id
@@ -119,7 +120,8 @@ def get_all_papers(request):
             raw_query = '''
             SELECT papers.paper_id, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS names,
             title, update_date, 
-            GROUP_CONCAT(DISTINCT categories.category_description ORDER BY categories.category_description SEPARATOR '; ') AS categories
+            GROUP_CONCAT(DISTINCT categories.category_description ORDER BY categories.category_description SEPARATOR '; ') AS categories,
+            papers.paper_link
             from papers join paper_authors on papers.paper_id = paper_authors.paper_id 
             join authors on authors.author_id = paper_authors.author_id 
             join paper_categories on papers.paper_id = paper_categories.paper_id
@@ -135,7 +137,8 @@ def get_all_papers(request):
             raw_query = '''
             SELECT papers.paper_id, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS names,
             title, update_date, 
-            GROUP_CONCAT(DISTINCT categories.category_description ORDER BY categories.category_description SEPARATOR '; ') AS categories
+            GROUP_CONCAT(DISTINCT categories.category_description ORDER BY categories.category_description SEPARATOR '; ') AS categories,
+            papers.paper_link
             from papers join paper_authors on papers.paper_id = paper_authors.paper_id 
             join authors on authors.author_id = paper_authors.author_id 
             join paper_categories on papers.paper_id = paper_categories.paper_id
@@ -155,7 +158,7 @@ def get_all_papers(request):
         result_set = cursor.fetchall()
 
     response = [
-        {'paper_id': row[0], 'names': row[1], 'title': row[2], 'update_date': row[3], 'category': row[4]}
+        {'paper_id': row[0], 'names': row[1], 'title': row[2], 'update_date': row[3], 'category': row[4], "link": row[5]}
         for row in result_set
     ]
 
