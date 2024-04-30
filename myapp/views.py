@@ -91,13 +91,15 @@ def get_all_papers(request):
     tex = request.GET.get('text', None)
     cur = request.GET.get('currentPage', None)
     print(val, tex, cur)
-    ints = int(cur) * 15
+    ints = (int(cur)-1 )* 15
     args = [ uname, ints]
+    print(args, uname, ints)
     print(request.body)
     if request.body and json.loads(request.body):
         print (json.loads(request.body))
     with connection.cursor() as cursor:
         if val == 'keyword':
+            print("Keyword search applied")
             raw_query = '''
             SELECT papers.paper_id, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS names,
             title, update_date, 
@@ -113,6 +115,7 @@ def get_all_papers(request):
             value = f"%{tex}%"
             cursor.execute(raw_query, (value,ints))
         elif val == 'author':
+            print("Author search applied")
             raw_query = '''
             SELECT papers.paper_id, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS names,
             title, update_date, 
@@ -128,6 +131,7 @@ def get_all_papers(request):
             value = f"%{tex}%"
             cursor.execute(raw_query, (value,ints))
         elif val == 'category':
+            print("Category search applied")
             raw_query = '''
             SELECT papers.paper_id, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS names,
             title, update_date, 
@@ -145,6 +149,8 @@ def get_all_papers(request):
             value = f"%{tex}%"
             cursor.execute(raw_query, (value,ints, ))
         else:
+            print("Hello there okay????")
+            print(args, uname, ints)
             cursor.callproc("paperpilot.homepage", args)
         result_set = cursor.fetchall()
 
