@@ -195,7 +195,7 @@ def paper_statistics(request):
     ]
 
     return JsonResponse(papers_by_year, safe=False)
-
+'''
 @csrf_exempt
 def post_data(request):
     if request.method == 'POST':
@@ -206,6 +206,7 @@ def post_data(request):
             return JsonResponse({'status': 'success'}, status=200)
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+'''
         
 @csrf_exempt
 def post_upp(request):
