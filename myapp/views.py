@@ -90,10 +90,11 @@ def get_all_papers(request):
     val = request.GET.get('val', None)
     tex = request.GET.get('text', None)
     cur = request.GET.get('currentPage', None)
-    print(val, tex, cur)
+    usn = request.GET.get('uname', None)
+    print(val, tex, cur, usn)
     ints = (int(cur)-1 )* 15
-    args = [ uname, ints]
-    print(args, uname, ints)
+    args = [ usn, ints]
+    print(args, usn, ints)
     print(request.body)
     if request.body and json.loads(request.body):
         print (json.loads(request.body))
@@ -153,7 +154,7 @@ def get_all_papers(request):
             cursor.execute(raw_query, (value,ints, ))
         else:
             print("Hello there okay????")
-            print(args, uname, ints)
+            print(args, usn, ints)
             cursor.callproc("paperpilot.homepage", args)
         result_set = cursor.fetchall()
 

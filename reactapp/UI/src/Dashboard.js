@@ -128,7 +128,8 @@ const Dashboard = () => {
       try {
         console.log(value);
         console.log(currentPage);
-        const params = { val: value, text: text, currentPage: currentPage};
+        console.log(localStorage.getItem("userId"));
+        const params = { val: value, text: text, currentPage: currentPage, uname: localStorage.getItem("userId")};
         const response = await axios.get('http://localhost:8000/api/get_all_papers/', {params});
         setPapers(response.data);
 
@@ -142,6 +143,7 @@ const Dashboard = () => {
     }, [currentPage, currentFilter]);
 
   const addToFavorites = async (id) => {
+    let uToken = localStorage.getItem('token');
     let userId = localStorage.getItem('userId');
     let dataObject = { user_id: userId, paper_id: id };
     console.log(dataObject)

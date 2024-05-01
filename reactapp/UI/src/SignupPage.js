@@ -36,7 +36,7 @@ const SignupPage = () => {
 
             if (response.data && response.data.token) {
                 localStorage.setItem('token', response.data.token);
-                localStorage.setItem('userId', response.data.username);
+                localStorage.setItem('userId', JSON.parse(response.config.data).username);
                 window.location.href = '/main/dashboard';
             } else {
                 setError('Failed to sign up');
