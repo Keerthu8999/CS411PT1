@@ -63,6 +63,7 @@ const styles = {
       fontSize: '1em',
       borderRadius: '5px',
       marginLeft: '10px',
+      marginBottom: '0.5em'
   },
   rightAlign: {
       display: 'flex',
@@ -78,6 +79,16 @@ const buttons = {
   alignItems: 'center',
   padding: '0.65em'
 };
+
+const header = {
+  display: 'flex',
+  justifyContent: 'flexStart',
+  marginTop: '1em'
+}
+
+const searchBar = {
+  marginLeft: '0.8em'
+}
 
 
 const ListItem = ({ item, addToFavorites }) => {
@@ -99,10 +110,14 @@ const ListItem = ({ item, addToFavorites }) => {
               <span style={styles.date}>Last Updated : {item.update_date.split('T')[0]}</span>
           </div>
           <div style={styles.rightAlign}>
-              <a href={item.link} style={styles.link}>Link to paper</a>
-              <button style={styles.button} onClick={() => addToFavorites(item.paper_id)}>
+              {/* <a href={item.link} style={styles.link}>Link to paper</a>
+              <button style={styles.button} onClick={item.link}>
+                  View Paper
+              </button> */}
+              <Link to={item.link} className="btn btn-primary" style={styles.button}>View Paper</Link>
+              {!item.is_fav && <button style={styles.button} onClick={() => addToFavorites(item.paper_id)}>
                   Add to Favorites
-              </button>
+              </button>}
           </div>
       </div>
 
@@ -129,7 +144,7 @@ const Dashboard = () => {
         console.log(value);
         console.log(currentPage);
         console.log(localStorage.getItem("userId"));
-        const params = { val: value, text: text, currentPage: currentPage, uname: localStorage.getItem("userId")};
+        const params = { val: value, text: text, currentPage: currentPage, uname: localStorage.getItem("token")};
         const response = await axios.get('http://localhost:8000/api/get_all_papers/', {params});
         setPapers(response.data);
 
@@ -158,7 +173,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <header>
+      <header style={header}>
       <Form inline>
             <FormControl
               onChange={handleSearchInput}
@@ -168,9 +183,9 @@ const Dashboard = () => {
               className="mr-sm-2"
             />
             </Form>
-            <NavDropdown title="Search" id="basic-nav-dropdown">
+            <NavDropdown title="Search" id="basic-nav-dropdown" style={searchBar}>
               <NavDropdown.Item href="#keywordsearch" onClick={() => fetchData(1, 'keyword', searchText)}>Keyword</NavDropdown.Item>
-              <NavDropdown.Item href="#journalsearch" onClick={() => fetchData(1, 'journal', searchText)}>Journal</NavDropdown.Item>
+              {/* <NavDropdown.Item href="#journalsearch" onClick={() => fetchData(1, 'journal', searchText)}>Journal</NavDropdown.Item> */}
               <NavDropdown.Item href="#authorsearch"  onClick={() => fetchData(1, 'author', searchText)}>Author</NavDropdown.Item>
               <NavDropdown.Item href="#categorysearch" onClick={() => fetchData(1, 'category', searchText)}>Category</NavDropdown.Item>
             </NavDropdown> 
