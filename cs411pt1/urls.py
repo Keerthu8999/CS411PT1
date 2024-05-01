@@ -16,10 +16,12 @@ Including another URLconf
 """
 from django.urls import path
 from myapp import views
-from myapp.views import paper_statistics, LoginView, DataUserView, InteractiveDataUserView,  SignupView
+from myapp.views import paper_statistics, LoginView, DataUserView, InteractiveDataUserView,  SignupView, CategorySearchView, PapersCountView
 from django.contrib import admin
 
 urlpatterns = [
+    path('api/categories/search', CategorySearchView.as_view(), name='category-search'),
+    path('api/papers/count', PapersCountView.as_view(), name='papers-count'),
     path('api/data/interactive/user/<int:user_id>/', InteractiveDataUserView.as_view(), name='interactive-data-user'),
     path('api/data/user/<int:user_id>/', DataUserView.as_view(), name='data-user'),
     path('api/login/', LoginView.as_view(), name='login'),
