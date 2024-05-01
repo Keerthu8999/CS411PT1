@@ -97,8 +97,8 @@ def get_all_papers(request):
     args = [ usn, ints]
     print(args, usn, ints)
     print(request.body)
-    if request.body and json.loads(request.body):
-        print (json.loads(request.body))
+    # if request.body and json.loads(request.body):
+    #     print (json.loads(request.body))
     with connection.cursor() as cursor:
         if val == 'keyword':
             print("Keyword search applied")
@@ -154,15 +154,15 @@ def get_all_papers(request):
             value = f"%{tex}%"
             cursor.execute(raw_query, (value,ints, ))
         else:
-            print("Hello there okay????")
-            print(args, usn, ints)
+            # print("Hello there okay????")
+            # print(args, usn, ints)
             cursor.callproc("paperpilot.homepage", args)
         result_set = cursor.fetchall()
 
         response = []
         for row in result_set: 
             raw_query = '''select paper_id from user_preferred_papers where paper_id = %s and user_id = %s'''
-            cursor.execute(raw_query, (row[0], uid, ))
+            cursor.execute(raw_query, (row[0], usn, ))
             is_favourite = len(cursor.fetchall()) > 0
             response.append({'paper_id': row[0], 'names': row[1], 'title': row[2], 'update_date': row[3], 'category': row[4], "link": row[5], 'is_fav': is_favourite})
     # response = [

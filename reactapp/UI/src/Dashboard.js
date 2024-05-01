@@ -144,7 +144,7 @@ const Dashboard = () => {
         console.log(value);
         console.log(currentPage);
         console.log(localStorage.getItem("userId"));
-        const params = { val: value, text: text, currentPage: currentPage, uname: localStorage.getItem("userId")};
+        const params = { val: value, text: text, currentPage: currentPage, uname: localStorage.getItem("token")};
         const response = await axios.get('http://localhost:8000/api/get_all_papers/', {params});
         setPapers(response.data);
 
