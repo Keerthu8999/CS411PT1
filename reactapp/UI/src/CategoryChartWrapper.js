@@ -40,10 +40,11 @@ const CategoryChartWrapper = () => {
 
     return (
         <div class="container mt-4">
-            <h1>User's Preferred Categories</h1>
+            <h1>Papers published per year</h1>
 
             {showDropdown && (
                 <>
+                <p>Type 3 letters to start searching categories</p>
                     <Form>
                         <Form.Control
                             type="text"
