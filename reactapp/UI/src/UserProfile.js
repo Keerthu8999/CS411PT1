@@ -94,6 +94,7 @@ const UserProfilePage = () => {
       // Refresh the paper list after deletion
       await fetchPrefPapers();
       // Reset selectedPapers and hide checkboxes
+      await fetchPrefCat();
       setSelectedPapers([]);
       setShowCheckboxes(false);
     } catch (error) {
@@ -149,14 +150,15 @@ const UserProfilePage = () => {
               {isEditing && (
                 <Button variant="primary" onClick={handleSubmit}>Submit</Button>
               )}
-              <Form.Group className="mb-3">
+              {/* <Form.Group className="mb-3">
                 <Form.Label>Preferred Categories</Form.Label>
                 <Form.Control type="categories" value={categories.map(obj => obj.category_name).join(', ')} readOnly={true}  />
-              </Form.Group>
+              </Form.Group> */}
+              <p>Preferred Categories: {categories.map(obj => obj.category_name).join(', ')}</p>
             </Form>
           </Col>
           <Col>
-            {papers.length > 0 && <h2>List of Papers</h2>}
+            {papers.length > 0 && <h2>List of Preferred Papers</h2>}
             {!showCheckboxes &&  papers.length > 0 && (<Button onClick={handleDeleteClick} className="mb-3">Delete Papers</Button>)}
             <div style={{ height: '400px', overflowY: 'scroll' }}>
               <ul>
