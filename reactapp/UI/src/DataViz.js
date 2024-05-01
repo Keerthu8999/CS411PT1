@@ -16,9 +16,6 @@ function DataViz() {
             <Tab eventKey="paperchart" title="Visualization">
                 <CategoryChartWrapper />
             </Tab>
-            <Tab eventKey="interactivecount" title="Interactive">
-                <DataInteractive />
-            </Tab>
         </Tabs>
     );
 
