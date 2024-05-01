@@ -384,4 +384,43 @@ def delete_papers(request, user_id):
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
-      
+
+
+class CategorySearchView(APIView):
+    def get(self, request):
+        query = request.GET.get('query', '')
+        if not query:
+            return Response({"error": "Query parameter is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT DISTINCT category_id, category_name, category_description
+                FROM categories  
+                WHERE category_description LIKE %s
+                """, [f"%{query}%"])
+
+        category_list = dictfetchall(cursor)
+
+        return Response(category_list, status=status.HTTP_200_OK)
+
+class PapersCountView(APIView):
+    def get(self, request):
+        category = request.GET.get('category', '')
+        if not category:
+            return Response({"error": "Query parameter is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT COUNT(p.title) AS TotalPapers, YEAR(p.update_date) AS YearUpdated
+                FROM papers p 
+                JOIN paper_categories pc ON p.paper_id = pc.paper_id 
+                JOIN categories cat ON cat.category_id = pc.category_id 
+                AND cat.category_name = %s
+                WHERE p.title IS NOT NULL
+                GROUP BY YearUpdated
+                ORDER BY YearUpdated DESC
+                """, [category])
+
+        result=dictfetchall(cursor)
+
+        return Response(result, status=status.HTTP_200_OK)
