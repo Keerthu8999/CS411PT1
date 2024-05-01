@@ -27,3 +27,7 @@
     min-width: 0;
     width: 100%;
 }
+
+#basic-nav-dropdown {
+    margin-left: 0.5rem;
+}
