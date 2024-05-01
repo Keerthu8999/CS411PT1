@@ -115,9 +115,9 @@ const ListItem = ({ item, addToFavorites }) => {
                   View Paper
               </button> */}
               <Link to={item.link} className="btn btn-primary" style={styles.button}>View Paper</Link>
-              <button style={styles.button} onClick={() => addToFavorites(item.paper_id)}>
+              {!item.is_fav && <button style={styles.button} onClick={() => addToFavorites(item.paper_id)}>
                   Add to Favorites
-              </button>
+              </button>}
           </div>
       </div>
 
