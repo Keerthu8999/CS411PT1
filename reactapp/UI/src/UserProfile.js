@@ -156,8 +156,8 @@ const UserProfilePage = () => {
             </Form>
           </Col>
           <Col>
-            <h2>List of Papers</h2>
-            {!showCheckboxes&& (<Button onClick={handleDeleteClick} className="mb-3">Delete Papers</Button>)}
+            {papers.length > 0 && <h2>List of Papers</h2>}
+            {!showCheckboxes &&  papers.length > 0 && (<Button onClick={handleDeleteClick} className="mb-3">Delete Papers</Button>)}
             <div style={{ height: '400px', overflowY: 'scroll' }}>
               <ul>
                 {papers.map((paper) => (
@@ -175,7 +175,7 @@ const UserProfilePage = () => {
               </ul>
             </div>
             <br></br>
-            {showCheckboxes && (
+            {showCheckboxes && papers.length > 0 && (
               <Button onClick={handleConfirmDeletion} className="mb-3">Confirm Deletion</Button>
             )}
           </Col>
