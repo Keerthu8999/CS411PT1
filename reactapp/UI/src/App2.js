@@ -5,6 +5,7 @@ import {Container, Row, Col} from 'react-bootstrap';
 import LoginPage from './Login';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import HeaderNav from './Navbar';
+import DataViz from './DataViz';
 import Dashboard from './Dashboard';
 import SignupPage from './SignupPage';
 import UserProfilePage from './UserProfile';
@@ -16,7 +17,6 @@ const RootComponent = () => {
   };
 
 function App() {
-    console.log(`Comes into App?`)
     
 
     const router = createBrowserRouter([
@@ -63,6 +63,17 @@ function App() {
                 </Row>
                 <Row>
                 <Dashboard/>
+                </Row>
+                </Container>
+        },
+        {
+            path: "/main/data",
+            element: <Container>
+                <Row>
+                    <HeaderNav />
+                </Row>
+                <Row>
+                    <DataViz />
                 </Row>
                 </Container>
         }
