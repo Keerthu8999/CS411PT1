@@ -26,7 +26,8 @@ const LoginPage = () => {
             if (response.data && response.data.token) {
                 console.log(response.data)
                 localStorage.setItem('token', response.data.token);  // Store the token
-                window.location.href = '/main';  // Redirect to the main app
+                localStorage.setItem('userId', JSON.parse(response.config.data).username);
+                window.location.href = '/main/dashboard';  // Redirect to the main app
             } else {
                 setError('Failed to log in');  // Handle errors
             }

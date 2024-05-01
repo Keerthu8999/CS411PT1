@@ -16,15 +16,22 @@ Including another URLconf
 """
 from django.urls import path
 from myapp import views
-from myapp.views import paper_statistics
-from myapp.views import LoginView, DataUserView, InteractiveDataUserView
+from myapp.views import paper_statistics, LoginView, DataUserView, InteractiveDataUserView,  SignupView
 from django.contrib import admin
 
 urlpatterns = [
     path('api/data/interactive/user/<int:user_id>/', InteractiveDataUserView.as_view(), name='interactive-data-user'),
     path('api/data/user/<int:user_id>/', DataUserView.as_view(), name='data-user'),
     path('api/login/', LoginView.as_view(), name='login'),
+    path('api/signup/', SignupView.as_view(), name='signup'),
     path('admin/', admin.site.urls),
     path('', views.paper_statistics, name='article-data'),
-    path('api/post_data/', views.post_data, name='post-data')
+    path('api/post_data/', views.post_data, name='post-data'),
+    path('api/post_upp/', views.post_upp, name='post_upp'),
+    path('api/get_all_papers/', views.get_all_papers, name = 'get_all_papers'),
+    path('api/get_user_profile/', views.get_user_profile, name = 'get_user_profile'),
+    path('api/update_user_profile/', views.update_user_profile, name = 'update_user_profile'),
+    path('api/user_pref_categories/', views.get_user_pref_categories, name = 'get_user_pref_cat'),
+    path('api/user_pref_papers/', views.get_user_pref_papers, name = 'get_user_pref_papers'),
+    path('api/delete_papers/<int:user_id>/', views.delete_papers, name = 'delete_pref_papers')
 ]

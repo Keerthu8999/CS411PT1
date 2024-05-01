@@ -6,6 +6,9 @@ import LoginPage from './Login';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import HeaderNav from './Navbar';
 import DataViz from './DataViz';
+import Dashboard from './Dashboard';
+import SignupPage from './SignupPage';
+import UserProfilePage from './UserProfile';
 
 
 const RootComponent = () => {
@@ -26,6 +29,22 @@ function App() {
             element: <LoginPage />
         },
         {
+            path: "/signup",
+            element: <SignupPage />
+        },
+        {
+            path: "/userprofile",
+            element: <Container>
+            <Row>
+                <HeaderNav />
+            </Row>
+            <Row>
+            <UserProfilePage />
+            </Row>
+            </Container>
+            
+        },
+        {
             path: "/main",
             element: <Container>
             <Row>
@@ -43,7 +62,7 @@ function App() {
                     <HeaderNav />
                 </Row>
                 <Row>
-                    <p>Dashboard Content goes here</p>
+                <Dashboard/>
                 </Row>
                 </Container>
         },
