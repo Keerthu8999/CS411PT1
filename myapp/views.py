@@ -101,7 +101,7 @@ def get_all_papers(request):
         if val == 'keyword':
             print("Keyword search applied")
             raw_query = '''
-            SELECT papers.paper_id, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS names,
+            SELECT papers.paper_id, GROUP_CONCAT(DISTINCT name ORDER BY name SEPARATOR ', ') AS names,
             title, update_date, 
             GROUP_CONCAT(DISTINCT categories.category_description ORDER BY categories.category_description SEPARATOR '; ') AS categories,
             papers.paper_link
@@ -118,7 +118,7 @@ def get_all_papers(request):
         elif val == 'author':
             print("Author search applied")
             raw_query = '''
-            SELECT papers.paper_id, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS names,
+            SELECT papers.paper_id, GROUP_CONCAT(DISTINCT name ORDER BY name SEPARATOR ', ') AS names,
             title, update_date, 
             GROUP_CONCAT(DISTINCT categories.category_description ORDER BY categories.category_description SEPARATOR '; ') AS categories,
             papers.paper_link
@@ -135,7 +135,7 @@ def get_all_papers(request):
         elif val == 'category':
             print("Category search applied")
             raw_query = '''
-            SELECT papers.paper_id, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS names,
+            SELECT papers.paper_id, GROUP_CONCAT(DISTINCT name ORDER BY name SEPARATOR ', ') AS names,
             title, update_date, 
             GROUP_CONCAT(DISTINCT categories.category_description ORDER BY categories.category_description SEPARATOR '; ') AS categories,
             papers.paper_link
